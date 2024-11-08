@@ -50,38 +50,6 @@ public class UtenteController {
         this.utenteService.deleteUtente(currentAuthenticatedUtente.getId_utente());
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Page<Utente> findAllUtenti(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "nome") String sortBy) {
-        return this.utenteService.findAll(page, size, sortBy);
-    }
-
-    @GetMapping("/{id_utente}")
-    @ResponseStatus(HttpStatus.OK)
-    public Utente getUtente(@PathVariable UUID id_utente) {
-        Utente utente = this.utenteService.findById(id_utente);
-        return utente;
-    }
-
-    @PutMapping("/{id_utente}")
-    @ResponseStatus(HttpStatus.OK)
-    public Utente putUtente(@PathVariable UUID id_utente, @RequestBody @Validated UtenteDTO utente, BindingResult validationResult) {
-        if (validationResult.hasErrors()) {
-            validationResult.getAllErrors().forEach(System.out::println);
-            throw new BadRequestException("Ci sono stati errori nel payload!");
-        }
-        Utente updatedUtente = this.utenteService.findByIdAndUpdate(id_utente, utente);
-        return updatedUtente;
-    }
-
-    @DeleteMapping("/{id_utente}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUtente(@PathVariable UUID id_utente) {
-        this.utenteService.deleteUtente(id_utente);
-    }
 
     @GetMapping("/{id_utente}/prenotazioni")
     @ResponseStatus(HttpStatus.OK)
