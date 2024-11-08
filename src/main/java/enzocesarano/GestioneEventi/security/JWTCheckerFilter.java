@@ -35,14 +35,13 @@ public class JWTCheckerFilter extends OncePerRequestFilter {
             throw new UnauthorizedException("Inserire token nell'Authorization Header nel formato corretto!");
         String accessToken = authHeader.substring(7);
         jwt.verifyToken(accessToken);
-        
+
         String id_utente = jwt.getIdFromToken(accessToken);
         Utente currentUser = this.utenteService.findById(UUID.fromString(id_utente));
         if (currentUser == null || currentUser.getAuthorities().isEmpty()) {
             throw new UnauthorizedException("L'utente non ha i permessi per accedere a questa risorsa.");
         }
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                currentUser, null, currentUser.getAuthorities());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
     }

@@ -1,6 +1,7 @@
 package enzocesarano.GestioneEventi.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import enzocesarano.GestioneEventi.entities.Enum.RoleUtente;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,6 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonIgnoreProperties({"password", "role", "accountNonLocked", "credentialsNonExpired", "accountNonExpired", "authorities", "enabled"})
 public class Utente implements UserDetails {
 
     @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE)

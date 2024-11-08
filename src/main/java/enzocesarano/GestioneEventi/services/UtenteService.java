@@ -1,6 +1,5 @@
 package enzocesarano.GestioneEventi.services;
 
-import enzocesarano.GestioneEventi.entities.Enum.RoleUtente;
 import enzocesarano.GestioneEventi.entities.Prenotazione;
 import enzocesarano.GestioneEventi.entities.Utente;
 import enzocesarano.GestioneEventi.exceptions.BadRequestException;
@@ -40,7 +39,7 @@ public class UtenteService {
     public Utente saveUtente(UtenteDTO payload) {
         if (this.utenteRepository.existsByEmail(payload.email()))
             throw new BadRequestException("La mail è già in uso");
-        Utente newUtente = new Utente(payload.nome(), payload.cognome(), payload.email(), payload.username(), bcrypt.encode(payload.password()), RoleUtente.valueOf(payload.ruolo()));
+        Utente newUtente = new Utente(payload.nome(), payload.cognome(), payload.email(), payload.username(), bcrypt.encode(payload.password()), payload.ruolo());
         return this.utenteRepository.save(newUtente);
     }
 

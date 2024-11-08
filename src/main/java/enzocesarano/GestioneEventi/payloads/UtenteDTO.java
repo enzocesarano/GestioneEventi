@@ -1,6 +1,10 @@
 package enzocesarano.GestioneEventi.payloads;
 
-import jakarta.validation.constraints.*;
+import enzocesarano.GestioneEventi.entities.Enum.RoleUtente;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record UtenteDTO(@NotEmpty(message = "Il nome è obbligatorio!")
                         @Size(min = 2, max = 20, message = "Il nome deve contentere dai 2 ai 20 caratteri")
@@ -18,6 +22,5 @@ public record UtenteDTO(@NotEmpty(message = "Il nome è obbligatorio!")
                         @NotNull
                         String password,
                         @NotNull
-                        @Pattern(regexp = "^(UTENTE_NORMALE|ORGANIZZATORE_EVENTI)$", message = "Il ruolo deve essere UTENTE_NORMALE o ORGANIZZATORE_EVENTI")
-                        String ruolo) {
+                        RoleUtente ruolo) {
 }
