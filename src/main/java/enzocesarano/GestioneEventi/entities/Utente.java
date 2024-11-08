@@ -1,6 +1,7 @@
 package enzocesarano.GestioneEventi.entities;
 
-import enzocesarano.GestioneEventi.entities.Enum.RoleUente;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import enzocesarano.GestioneEventi.entities.Enum.RoleUtente;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +18,9 @@ import java.util.UUID;
 public class Utente {
 
     @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE)
+    @JsonBackReference
     List<Prenotazione> prenotazioni;
+    @JsonBackReference
     @OneToMany(mappedBy = "organizzatore", cascade = CascadeType.REMOVE)
     List<Evento> eventi;
     @Id
@@ -30,9 +33,9 @@ public class Utente {
     private String username;
     private String password;
     @Enumerated(EnumType.STRING)
-    private RoleUente ruolo;
+    private RoleUtente ruolo;
 
-    public Utente(String nome, String cognome, String username, String password, RoleUente ruolo) {
+    public Utente(String nome, String cognome, String username, String password, RoleUtente ruolo) {
         this.nome = nome;
         this.cognome = cognome;
         this.username = username;

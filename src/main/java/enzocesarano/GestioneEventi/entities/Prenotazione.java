@@ -1,6 +1,8 @@
 package enzocesarano.GestioneEventi.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,18 +19,21 @@ public class Prenotazione {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id_prenotazione;
 
+    @Setter(AccessLevel.NONE)
     private LocalDate data_prenotazione;
 
     @ManyToOne
     @JoinColumn(name = "id_utente")
+    @JsonManagedReference
     private Utente utente;
 
     @ManyToOne
     @JoinColumn(name = "id_evento")
+    @JsonManagedReference
     private Evento evento;
 
-    public Prenotazione(LocalDate data_prenotazione, Utente utente, Evento evento) {
-        this.data_prenotazione = data_prenotazione;
+    public Prenotazione(Utente utente, Evento evento) {
+        this.data_prenotazione = LocalDate.now();
         this.utente = utente;
         this.evento = evento;
     }
