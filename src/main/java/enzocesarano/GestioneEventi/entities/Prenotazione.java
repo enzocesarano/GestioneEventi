@@ -20,7 +20,8 @@ public class Prenotazione {
     private UUID id_prenotazione;
 
     @Setter(AccessLevel.NONE)
-    private LocalDate data_prenotazione;
+    @Column(name = "data_prenotazione")
+    private LocalDate dataPrenotazione;
 
     @ManyToOne
     @JoinColumn(name = "id_utente")
@@ -33,7 +34,7 @@ public class Prenotazione {
     private Evento evento;
 
     public Prenotazione(Utente utente, Evento evento) {
-        this.data_prenotazione = LocalDate.now();
+        this.dataPrenotazione = LocalDate.now();
         this.utente = utente;
         this.evento = evento;
     }

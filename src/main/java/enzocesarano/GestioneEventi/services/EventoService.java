@@ -1,6 +1,7 @@
 package enzocesarano.GestioneEventi.services;
 
 import enzocesarano.GestioneEventi.entities.Evento;
+import enzocesarano.GestioneEventi.entities.Utente;
 import enzocesarano.GestioneEventi.exceptions.NotFoundException;
 import enzocesarano.GestioneEventi.payloads.EventoDTO;
 import enzocesarano.GestioneEventi.repositories.EventoRepository;
@@ -18,6 +19,9 @@ public class EventoService {
     @Autowired
     private EventoRepository eventoRepository;
 
+    @Autowired
+    private UtenteService utenteService;
+
 
     public Page<Evento> findAll(int page, int size, String sortBy) {
         if (size > 20) size = 20;
@@ -29,8 +33,10 @@ public class EventoService {
         return this.eventoRepository.findById(id_evento).orElseThrow(() -> new NotFoundException(id_evento));
     }
 
-    public Evento saveEvento(EventoDTO payload) {
+    public Evento saveEvento(EventoDTO payload, UUID id_utente) {
+        Utente utente = this.utenteService.findById(id_utente);
         Evento newEvento = new Evento(payload.titolo(), payload.descrizione(), payload.data_evento(), payload.luogo_evento(), payload.posti_disponibili());
+        newEvento.setOrganizzatore(utente);
         return this.eventoRepository.save(newEvento);
     }
 
@@ -49,5 +55,10 @@ public class EventoService {
     public void deleteEvento(UUID id_evento) {
         Evento evento = this.findById(id_evento);
         this.eventoRepository.delete(evento);
+    }
+
+    public Page<Evento> findAllByOrganizzatore(UUID organizzatore, int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return eventoRepository.findByOrganizzatore(organizzatore, pageable);
     }
 }

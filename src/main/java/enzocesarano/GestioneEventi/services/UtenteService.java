@@ -1,5 +1,6 @@
 package enzocesarano.GestioneEventi.services;
 
+import enzocesarano.GestioneEventi.entities.Enum.RoleUtente;
 import enzocesarano.GestioneEventi.entities.Prenotazione;
 import enzocesarano.GestioneEventi.entities.Utente;
 import enzocesarano.GestioneEventi.exceptions.BadRequestException;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +23,9 @@ public class UtenteService {
 
     @Autowired
     private UtenteRepository utenteRepository;
+
+    @Autowired
+    private PasswordEncoder bcrypt;
 
     public Page<Utente> findAll(int page, int size, String sortBy) {
         if (size > 20) size = 20;
@@ -35,7 +40,7 @@ public class UtenteService {
     public Utente saveUtente(UtenteDTO payload) {
         if (this.utenteRepository.existsByEmail(payload.email()))
             throw new BadRequestException("La mail è già in uso");
-        Utente newUtente = new Utente(payload.nome(), payload.cognome(), payload.email(), payload.username(), payload.password(), payload.ruolo());
+        Utente newUtente = new Utente(payload.nome(), payload.cognome(), payload.email(), payload.username(), bcrypt.encode(payload.password()), RoleUtente.valueOf(payload.ruolo()));
         return this.utenteRepository.save(newUtente);
     }
 
@@ -59,8 +64,8 @@ public class UtenteService {
         this.utenteRepository.delete(utente);
     }
 
-    public List<Prenotazione> findPrenotazioniByUtenteId(UUID idUtente) {
-        Utente utente = this.findById(idUtente);
+    public List<Prenotazione> findPrenotazioniByUtenteId(UUID id_utente) {
+        Utente utente = this.findById(id_utente);
         return utente.getPrenotazioni();
     }
 

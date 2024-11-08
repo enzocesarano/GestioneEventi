@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public record EventoDTO(
         @NotEmpty(message = "Il titolo è obbligatorio!")
-        @Size(min = 3, max = 15, message = "Il titolo deve contenere dai 3 ai 15 caratteri")
+        @Size(min = 3, max = 30, message = "Il titolo deve contenere dai 3 ai 30 caratteri")
         String titolo,
 
         @NotEmpty(message = "La descrizione è obbligatoria!")
@@ -23,5 +23,5 @@ public record EventoDTO(
 
         @Positive(message = "Il numero di posti disponibili deve essere positivo")
         int posti_disponibili) {
-    
+
 }

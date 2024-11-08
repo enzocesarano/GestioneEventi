@@ -1,6 +1,5 @@
 package enzocesarano.GestioneEventi.payloads;
 
-import enzocesarano.GestioneEventi.entities.Enum.RoleUtente;
 import jakarta.validation.constraints.*;
 
 public record UtenteDTO(@NotEmpty(message = "Il nome è obbligatorio!")
@@ -17,9 +16,8 @@ public record UtenteDTO(@NotEmpty(message = "Il nome è obbligatorio!")
                         String username,
                         @NotEmpty(message = "Il campo password non può essere vuoto!")
                         @NotNull
-                        @Pattern(regexp = "^(?=.[a-z])(?=.[A-Z])(?=.*\\d)(?=.[@$!%?&])[A-Za-z\\d@$!%?&]{8,}$", message = "La password non segue i criteri comuni")
                         String password,
                         @NotNull
-                        @Pattern(regexp = "IN_PROGRAMMA | COMPLETATO")
-                        RoleUtente ruolo) {
+                        @Pattern(regexp = "^(UTENTE_NORMALE|ORGANIZZATORE_EVENTI)$", message = "Il ruolo deve essere UTENTE_NORMALE o ORGANIZZATORE_EVENTI")
+                        String ruolo) {
 }
