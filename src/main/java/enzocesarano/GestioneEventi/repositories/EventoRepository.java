@@ -1,6 +1,7 @@
 package enzocesarano.GestioneEventi.repositories;
 
 import enzocesarano.GestioneEventi.entities.Evento;
+import enzocesarano.GestioneEventi.entities.Utente;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, UUID> {
-    Page<Evento> findByOrganizzatore(UUID id_utente, Pageable pageable);
+    Page<Evento> findByOrganizzatore(Utente utente, Pageable pageable);
 }

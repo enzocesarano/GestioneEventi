@@ -75,7 +75,7 @@ public class UtenteController {
             @AuthenticationPrincipal Utente currentAuthenticatedUtente,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "dataEvento") String sortBy) {
+            @RequestParam(defaultValue = "titolo") String sortBy) {
         return this.eventoService.findAllByOrganizzatore(currentAuthenticatedUtente, page, size, sortBy);
     }
 

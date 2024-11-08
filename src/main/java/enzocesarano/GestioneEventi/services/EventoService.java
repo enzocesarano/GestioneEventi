@@ -65,6 +65,6 @@ public class EventoService {
 
     public Page<Evento> findAllByOrganizzatore(Utente currentAuthenticatedUtente, int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return eventoRepository.findByOrganizzatore(currentAuthenticatedUtente.getId_utente(), pageable);
+        return eventoRepository.findByOrganizzatore(currentAuthenticatedUtente, pageable);
     }
 }
