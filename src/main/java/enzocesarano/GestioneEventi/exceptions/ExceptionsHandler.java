@@ -1,6 +1,6 @@
 package enzocesarano.GestioneEventi.exceptions;
 
-import enzocesarano.D1_Esercizio.payloads.ErrorsResponseDTO;
+import enzocesarano.GestioneEventi.payloads.ErrorsResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
