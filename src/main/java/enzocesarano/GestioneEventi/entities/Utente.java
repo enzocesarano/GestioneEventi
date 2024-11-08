@@ -27,7 +27,7 @@ public class Utente {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
 
-    private UUID id;
+    private UUID id_utente;
     private String nome;
     private String cognome;
     private String email;
