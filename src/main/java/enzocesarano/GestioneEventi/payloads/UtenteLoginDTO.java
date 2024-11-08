@@ -1,5 +1,5 @@
 package enzocesarano.GestioneEventi.payloads;
 
-public record UtenteLoginDTO(String username, String password) {
-    
+public record UtenteLoginDTO(String email, String password) {
+
 }

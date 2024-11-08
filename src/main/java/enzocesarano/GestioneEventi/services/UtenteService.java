@@ -63,4 +63,8 @@ public class UtenteService {
         Utente utente = this.findById(idUtente);
         return utente.getPrenotazioni();
     }
+
+    public Utente findByEmail(String email) {
+        return this.utenteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("L'utente con email " + email + " non è stato trovato"));
+    }
 }
