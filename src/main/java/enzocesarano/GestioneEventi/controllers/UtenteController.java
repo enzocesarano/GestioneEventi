@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,22 @@ public class UtenteController {
 
     @Autowired
     private EventoService eventoService;
+
+    @GetMapping("/me")
+    public Utente getProfile(@AuthenticationPrincipal Utente currentAuthenticatedUtente) {
+        return currentAuthenticatedUtente;
+    }
+
+    @PutMapping("/me")
+    public Utente updateProfile(@AuthenticationPrincipal Utente currentAuthenticatedUtente, @RequestBody @Validated UtenteDTO body) {
+        return this.utenteService.findByIdAndUpdate(currentAuthenticatedUtente.getId_utente(), body);
+    }
+
+    @DeleteMapping("/me")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProfile(@AuthenticationPrincipal Utente currentAuthenticatedUtente) {
+        this.utenteService.deleteUtente(currentAuthenticatedUtente.getId_utente());
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

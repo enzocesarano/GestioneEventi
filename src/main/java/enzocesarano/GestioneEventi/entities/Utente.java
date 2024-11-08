@@ -55,4 +55,5 @@ public class Utente implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.ruolo.name()));
     }
+    
 }
