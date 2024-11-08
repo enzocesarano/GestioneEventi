@@ -43,7 +43,7 @@ public class EventoService {
 
     public Evento findByIdAndUpdate(UUID id_evento, EventoDTO payload, Utente currentAuthenticatedUtente) {
         Evento evento = this.findById(id_evento);
-        if (!evento.getOrganizzatore().equals(currentAuthenticatedUtente)) {
+        if (!evento.getOrganizzatore().getId_utente().equals(currentAuthenticatedUtente.getId_utente())) {
             throw new UnauthorizedException("Non hai i permessi per modificare questo evento!");
         }
         evento.setTitolo(payload.titolo());
@@ -57,8 +57,8 @@ public class EventoService {
 
     public void deleteEvento(UUID id_evento, Utente currentAuthenticatedUtente) {
         Evento evento = this.findById(id_evento);
-        if (!evento.getOrganizzatore().equals(currentAuthenticatedUtente)) {
-            throw new UnauthorizedException("Non hai i permessi per eliminare questo evento!");
+        if (!evento.getOrganizzatore().getId_utente().equals(currentAuthenticatedUtente.getId_utente())) {
+            throw new UnauthorizedException("Non hai i permessi per modificare questo evento!");
         }
         this.eventoRepository.delete(evento);
     }
