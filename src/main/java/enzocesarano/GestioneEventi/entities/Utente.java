@@ -30,14 +30,16 @@ public class Utente {
     private UUID id;
     private String nome;
     private String cognome;
+    private String email;
     private String username;
     private String password;
     @Enumerated(EnumType.STRING)
     private RoleUtente ruolo;
 
-    public Utente(String nome, String cognome, String username, String password, RoleUtente ruolo) {
+    public Utente(String nome, String cognome, String email, String username, String password, RoleUtente ruolo) {
         this.nome = nome;
         this.cognome = cognome;
+        this.email = email;
         this.username = username;
         this.password = password;
         this.ruolo = ruolo;
