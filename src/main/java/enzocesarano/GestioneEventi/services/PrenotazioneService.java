@@ -38,9 +38,9 @@ public class PrenotazioneService {
         return this.prenotazioneRepository.findById(id_prenotazione).orElseThrow(() -> new NotFoundException(id_prenotazione));
     }
 
-    public Prenotazione savePrenotazione(PrenotazioneDTO payload, UUID id_utente) {
+    public Prenotazione savePrenotazione(PrenotazioneDTO payload, Utente currentAuthenticatedUtente) {
         Evento evento = this.eventoService.findById(UUID.fromString(payload.id_evento()));
-        Utente utente = this.utenteService.findById(id_utente);
+        Utente utente = this.utenteService.findById(currentAuthenticatedUtente.getId_utente());
         if (this.prenotazioneRepository.existsByUtenteAndEvento(utente, evento)) {
             throw new BadRequestException("Hai già una prenotazione per questo evento.");
         }

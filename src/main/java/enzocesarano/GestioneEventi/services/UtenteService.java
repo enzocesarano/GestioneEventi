@@ -63,8 +63,8 @@ public class UtenteService {
         this.utenteRepository.delete(utente);
     }
 
-    public List<Prenotazione> findPrenotazioniByUtenteId(UUID id_utente) {
-        Utente utente = this.findById(id_utente);
+    public List<Prenotazione> findPrenotazioniByUtenteId(Utente currentAuthenticatedUtente) {
+        Utente utente = this.findById(currentAuthenticatedUtente.getId_utente());
         return utente.getPrenotazioni();
     }
 

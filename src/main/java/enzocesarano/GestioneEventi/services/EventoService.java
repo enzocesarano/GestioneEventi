@@ -3,6 +3,7 @@ package enzocesarano.GestioneEventi.services;
 import enzocesarano.GestioneEventi.entities.Evento;
 import enzocesarano.GestioneEventi.entities.Utente;
 import enzocesarano.GestioneEventi.exceptions.NotFoundException;
+import enzocesarano.GestioneEventi.exceptions.UnauthorizedException;
 import enzocesarano.GestioneEventi.payloads.EventoDTO;
 import enzocesarano.GestioneEventi.repositories.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,18 @@ public class EventoService {
         return this.eventoRepository.findById(id_evento).orElseThrow(() -> new NotFoundException(id_evento));
     }
 
-    public Evento saveEvento(EventoDTO payload, UUID id_utente) {
-        Utente utente = this.utenteService.findById(id_utente);
+    public Evento saveEvento(EventoDTO payload, Utente currentUtente) {
+        Utente utente = this.utenteService.findById(currentUtente.getId_utente());
         Evento newEvento = new Evento(payload.titolo(), payload.descrizione(), payload.data_evento(), payload.luogo_evento(), payload.posti_disponibili());
         newEvento.setOrganizzatore(utente);
         return this.eventoRepository.save(newEvento);
     }
 
-    public Evento findByIdAndUpdate(UUID id_evento, EventoDTO payload) {
+    public Evento findByIdAndUpdate(UUID id_evento, EventoDTO payload, Utente currentAuthenticatedUtente) {
         Evento evento = this.findById(id_evento);
-
+        if (!evento.getOrganizzatore().equals(currentAuthenticatedUtente)) {
+            throw new UnauthorizedException("Non hai i permessi per modificare questo evento!");
+        }
         evento.setTitolo(payload.titolo());
         evento.setDescrizione(payload.descrizione());
         evento.setData_evento(payload.data_evento());
@@ -52,13 +55,16 @@ public class EventoService {
         return this.eventoRepository.save(evento);
     }
 
-    public void deleteEvento(UUID id_evento) {
+    public void deleteEvento(UUID id_evento, Utente currentAuthenticatedUtente) {
         Evento evento = this.findById(id_evento);
+        if (!evento.getOrganizzatore().equals(currentAuthenticatedUtente)) {
+            throw new UnauthorizedException("Non hai i permessi per eliminare questo evento!");
+        }
         this.eventoRepository.delete(evento);
     }
 
-    public Page<Evento> findAllByOrganizzatore(UUID organizzatore, int page, int size, String sortBy) {
+    public Page<Evento> findAllByOrganizzatore(Utente currentAuthenticatedUtente, int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return eventoRepository.findByOrganizzatore(organizzatore, pageable);
+        return eventoRepository.findByOrganizzatore(currentAuthenticatedUtente.getId_utente(), pageable);
     }
 }

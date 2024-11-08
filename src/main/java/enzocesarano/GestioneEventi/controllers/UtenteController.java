@@ -51,67 +51,67 @@ public class UtenteController {
     }
 
 
-    @GetMapping("/{id_utente}/prenotazioni")
+    @GetMapping("/me/prenotazioni")
     @ResponseStatus(HttpStatus.OK)
-    public List<Prenotazione> getPrenotazioniByUtente(@PathVariable UUID id_utente) {
-        List<Prenotazione> prenotazioni = this.utenteService.findPrenotazioniByUtenteId(id_utente);
+    public List<Prenotazione> getPrenotazioniByUtente(@AuthenticationPrincipal Utente currentAuthenticatedUtente) {
+        List<Prenotazione> prenotazioni = this.utenteService.findPrenotazioniByUtenteId(currentAuthenticatedUtente);
         return prenotazioni;
     }
 
-    @PostMapping("/{id_utente}/prenotazioni")
+    @PostMapping("/me/prenotazioni")
     @ResponseStatus(HttpStatus.CREATED)
-    public Prenotazione postPrenotazione(@RequestBody @Validated PrenotazioneDTO payload, @PathVariable UUID id_utente, BindingResult validationResult) {
+    public Prenotazione postPrenotazione(@RequestBody @Validated PrenotazioneDTO payload, @AuthenticationPrincipal Utente currentAuthenticatedUtente, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             validationResult.getAllErrors().forEach(System.out::println);
             throw new BadRequestException("Ci sono stati errori nel payload!");
         }
-        return this.prenotazioneService.savePrenotazione(payload, id_utente);
+        return this.prenotazioneService.savePrenotazione(payload, currentAuthenticatedUtente);
     }
 
-    @GetMapping("/{id_utente}/eventi")
+    @GetMapping("/me/eventi")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ORGANIZZATORE_EVENTI')")
     public Page<Evento> findAllEventiPerUtente(
-            @PathVariable UUID id_utente,
+            @AuthenticationPrincipal Utente currentAuthenticatedUtente,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "dataEvento") String sortBy) {
-        return this.eventoService.findAllByOrganizzatore(id_utente, page, size, sortBy);
+        return this.eventoService.findAllByOrganizzatore(currentAuthenticatedUtente, page, size, sortBy);
     }
 
-    @GetMapping("/{id_utente}/eventi/{id_evento}")
+    @GetMapping("/me/eventi/{id_evento}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ORGANIZZATORE_EVENTI')")
-    public Evento getEvento(@PathVariable UUID id_evento) {
+    public Evento getEvento(@PathVariable UUID id_evento, @AuthenticationPrincipal Utente currentAuthenticatedUtente) {
         return this.eventoService.findById(id_evento);
     }
 
-    @PostMapping("/{id_utente}/eventi")
+    @PostMapping("/me/eventi")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ORGANIZZATORE_EVENTI')")
-    public Evento postEvento(@RequestBody @Validated EventoDTO payload, @PathVariable UUID id_utente, BindingResult validationResult) {
+    public Evento postEvento(@RequestBody @Validated EventoDTO payload, @AuthenticationPrincipal Utente currentAuthenticatedUtente, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             validationResult.getAllErrors().forEach(System.out::println);
             throw new BadRequestException("Ci sono stati errori nel payload!");
         }
-        return this.eventoService.saveEvento(payload, id_utente);
+        return this.eventoService.saveEvento(payload, currentAuthenticatedUtente);
     }
 
-    @PutMapping("/{id_utente}/eventi/{id_evento}")
+    @PutMapping("/me/eventi/{id_evento}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('ORGANIZZATORE_EVENTI')")
-    public Evento putEvento(@PathVariable UUID id_evento, @RequestBody @Validated EventoDTO payload, BindingResult validationResult) {
+    public Evento putEvento(@PathVariable UUID id_evento, @RequestBody @Validated EventoDTO payload, BindingResult validationResult, @AuthenticationPrincipal Utente currentAuthenticatedUtente) {
         if (validationResult.hasErrors()) {
             validationResult.getAllErrors().forEach(System.out::println);
             throw new BadRequestException("Ci sono stati errori nel payload!");
         }
-        return this.eventoService.findByIdAndUpdate(id_evento, payload);
+        return this.eventoService.findByIdAndUpdate(id_evento, payload, currentAuthenticatedUtente);
     }
 
-    @DeleteMapping("/{id_utente}/eventi/{id_evento}")
+    @DeleteMapping("/me/eventi/{id_evento}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ORGANIZZATORE_EVENTI')")
-    public void deleteEvento(@PathVariable UUID id_evento) {
-        this.eventoService.deleteEvento(id_evento);
+    public void deleteEvento(@PathVariable UUID id_evento, @AuthenticationPrincipal Utente currentAuthenticatedUtente) {
+        this.eventoService.deleteEvento(id_evento, currentAuthenticatedUtente);
     }
 }
